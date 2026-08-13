@@ -1,0 +1,29 @@
+<button routerLink="/trips">
+  ← Back to Trips
+</button>
+@if (trip) {
+
+  <main class="trip-details">
+
+    <img
+      [src]="trip.image"
+      [alt]="trip.title"
+    >
+
+    <section>
+
+      <h1>{{ trip.title }}</h1>
+
+      <p>📍 {{ trip.location }}</p>
+
+      <p>📅 {{ trip.date }}</p>
+
+    </section>
+
+  </main>
+
+} @else {
+
+  <p>Trip not found.</p>
+
+}

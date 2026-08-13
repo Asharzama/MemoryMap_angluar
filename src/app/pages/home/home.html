@@ -1,0 +1,46 @@
+<main class="travel-container">
+  <section class="hero">
+    <h1>Travel Memory Map</h1>
+
+    <p>Keep track of the places you've visited and the memories you've created.</p>
+
+    <input type="text" [(ngModel)]="searchLocation" placeholder="Search a location..." />
+
+    @if (searchLocation) {
+      <p>
+        Searching for:
+        <strong>{{ searchLocation }}</strong>
+      </p>
+    }
+  </section>
+
+  <section>
+    @if (trips.length > 0) {
+      <p>
+        You have
+        <strong>{{ trips.length }}</strong>
+        trips recorded.
+      </p>
+
+      <div class="trip-grid">
+        @for (trip of trips; track trip.title) {
+          <article class="trip-card">
+            <img [src]="trip.image" [alt]="trip.title" />
+
+            <div class="trip-info">
+              <h2>{{ trip.title }}</h2>
+
+              <p>📍 {{ trip.location }}</p>
+
+              <p>📅 {{ trip.date }}</p>
+
+              <button (click)="selectTrip(trip)">Explore Trip</button>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <p>You haven't added any trips yet.</p>
+    }
+  </section>
+</main>
