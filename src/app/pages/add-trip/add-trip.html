@@ -1,3 +1,53 @@
-<h1>Add New Trip</h1>
+<main class="add-trip">
+  <h1>Add New Trip</h1>
 
-<p>The trip creation form will be built here.</p>
+  <form [formGroup]="tripForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="title"> Trip Name </label>
+
+      <input
+        id="title"
+        type="text"
+        formControlName="title"
+        placeholder="e.g. Dubai Desert Safari"
+      />
+
+      @if (tripForm.controls.title.invalid && tripForm.controls.title.touched) {
+        <p class="error">Trip name is required and must be at least 3 characters.</p>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="location"> Location </label>
+
+      <input id="location" type="text" formControlName="location" placeholder="e.g. Dubai, UAE" />
+
+      @if (tripForm.controls.location.invalid && tripForm.controls.location.touched) {
+        <p class="error">Location is required.</p>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="date"> Visit Date </label>
+
+      <input id="date" type="date" formControlName="date" />
+
+      @if (tripForm.controls.date.invalid && tripForm.controls.date.touched) {
+        <p class="error">Visit date is required.</p>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="description"> Description </label>
+
+      <textarea
+        id="description"
+        formControlName="description"
+        rows="5"
+        placeholder="Tell us about your trip..."
+      ></textarea>
+    </div>
+
+    <button type="submit" [disabled]="tripForm.invalid">Save Trip</button>
+  </form>
+</main>

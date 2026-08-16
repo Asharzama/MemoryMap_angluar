@@ -44,3 +44,27 @@
   border-radius: 8px;
   cursor: pointer;
 }
+
+app-map {
+  display: block;
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.travel-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.hero,
+.map-section,
+.trip-section {
+  width: 100%;
+}
+
+.map-section {
+  margin: 2rem 0;
+}
