@@ -1,34 +1,19 @@
 <main class="travel-container">
-
   <section class="hero">
-
     <h1>Travel Memory Map</h1>
 
-    <p>
-      Keep track of the places you've visited
-      and the memories you've created.
-    </p>
+    <p>Keep track of the places you've visited and the memories you've created.</p>
 
-    <input
-      type="text"
-      [(ngModel)]="searchLocation"
-      placeholder="Search a location..."
-    >
-
+    <input type="text" [(ngModel)]="searchLocation" placeholder="Search a location..." />
   </section>
 
   <section class="map-section">
-
     <h2>Places I've Visited</h2>
 
-    <app-map></app-map>
-
+    <app-map [trips]="trips()"></app-map>
   </section>
 
   <section class="trip-section">
-
     <!-- trip cards -->
-
   </section>
-
 </main>

@@ -44,6 +44,8 @@ export class AddTrip {
   const newTrip: Trip = {
     id: Date.now(),
     title: formValue.title ?? '',
+    latitude: 0,
+    longitude: 0,
     location: formValue.location ?? '',
     date: formValue.date ?? '',
     description: formValue.description ?? '',
