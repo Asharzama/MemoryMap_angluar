@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Trip } from '../../services/trip.service';
+
 import * as L from 'leaflet';
+
+import { Trip } from '../../services/trip.service';
 
 @Component({
   selector: 'app-map',
@@ -10,45 +12,10 @@ import * as L from 'leaflet';
 })
 export class Map implements AfterViewInit, OnChanges {
   @Input() trips: Trip[] = [];
-  private map!: L.Map;
-  private markerLayer = L.layerGroup();
-  private updateMarkers(): void {
-    if (!this.map) {
-      return;
-    }
 
-    this.markerLayer.clearLayers();
+  private map?: L.Map;
 
-    const locations: L.LatLngExpression[] = [];
-
-    this.trips.forEach((trip) => {
-      const marker = L.marker([trip.latitude, trip.longitude]);
-
-      marker
-        .bindPopup(
-          `
-  <div class="map-popup">
-    <strong>${trip.title}</strong>
-    <br>
-    📍 ${trip.location}
-    <br>
-    📅 ${trip.date}
-  </div>
-`,
-        )
-        .addTo(this.markerLayer);
-
-      locations.push([trip.latitude, trip.longitude]);
-    });
-
-    this.markerLayer.addTo(this.map);
-
-    if (locations.length > 0) {
-      this.map.fitBounds(L.latLngBounds(locations), {
-        padding: [30, 30],
-      });
-    }
-  }
+  private markers: L.Marker[] = [];
 
   ngAfterViewInit(): void {
     this.map = L.map('map');
@@ -57,11 +24,48 @@ export class Map implements AfterViewInit, OnChanges {
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(this.map);
 
-    this.updateMarkers();
+    this.renderMarkers();
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['trips']) {
-      this.updateMarkers();
+      this.renderMarkers();
     }
+  }
+
+  private renderMarkers(): void {
+    if (!this.map) {
+      return;
+    }
+
+    this.clearMarkers();
+
+    const locations: L.LatLngExpression[] = [];
+
+    this.trips.forEach((trip) => {
+      const marker = L.marker([trip.latitude, trip.longitude]).addTo(this.map!).bindPopup(`
+          <strong>${trip.title}</strong>
+          <br>
+          ${trip.location}
+        `);
+
+      this.markers.push(marker);
+
+      locations.push([trip.latitude, trip.longitude]);
+    });
+
+    if (locations.length > 0) {
+      this.map.fitBounds(L.latLngBounds(locations), {
+        padding: [30, 30],
+      });
+    }
+  }
+
+  private clearMarkers(): void {
+    this.markers.forEach((marker) => {
+      marker.remove();
+    });
+
+    this.markers = [];
   }
 }

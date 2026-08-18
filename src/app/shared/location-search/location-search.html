@@ -1,0 +1,22 @@
+<div class="location-search">
+  <div class="search-row">
+    <input
+      type="text"
+      [(ngModel)]="searchText"
+      placeholder="Search a location..."
+      (keyup.enter)="search()"
+    />
+
+    <button type="button" (click)="search()">Search</button>
+  </div>
+
+  @if (results.length > 0) {
+    <div class="results">
+      @for (result of results; track result.place_id) {
+        <button type="button" class="result-item" (click)="selectLocation(result)">
+          {{ result.display_name }}
+        </button>
+      }
+    </div>
+  }
+</div>

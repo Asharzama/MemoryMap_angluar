@@ -3,8 +3,7 @@
     <h1>Travel Memory Map</h1>
 
     <p>Keep track of the places you've visited and the memories you've created.</p>
-
-    <input type="text" [(ngModel)]="searchLocation" placeholder="Search a location..." />
+    <app-location-search (locationSelected)="onLocationSelected($event)"></app-location-search>
   </section>
 
   <section class="map-section">
