@@ -1,8 +1,20 @@
 import { AfterViewInit, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-
+import { LocationResult } from '../../models/location-result';
 import * as L from 'leaflet';
 
 import { Trip } from '../../services/trip.service';
+
+const defaultIcon = L.icon({
+  iconUrl: 'assets/leaflet/marker-icon.png',
+  iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
+  shadowUrl: 'assets/leaflet/marker-shadow.png',
+
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+L.Marker.prototype.options.icon = defaultIcon;
 
 @Component({
   selector: 'app-map',
@@ -11,11 +23,38 @@ import { Trip } from '../../services/trip.service';
   styleUrl: './map.scss',
 })
 export class Map implements AfterViewInit, OnChanges {
+  
   @Input() trips: Trip[] = [];
-
+  private searchMarker?: L.Marker;
   private map?: L.Map;
 
   private markers: L.Marker[] = [];
+
+  goToLocation(result: LocationResult): void {
+    if (!this.map) {
+      return;
+    }
+
+    const latitude = Number(result.lat);
+    const longitude = Number(result.lon);
+
+    this.map.flyTo([latitude, longitude], 16);
+
+    if (this.searchMarker) {
+      this.searchMarker.remove();
+    }
+
+    this.searchMarker = L.marker([latitude, longitude])
+      .addTo(this.map)
+      .bindPopup(
+        `
+    <strong>Selected Location</strong>
+    <br>
+    ${result.display_name}
+  `,
+      )
+      .openPopup();
+  }
 
   ngAfterViewInit(): void {
     this.map = L.map('map');

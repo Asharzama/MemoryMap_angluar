@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Trip, TripService } from '../../services/trip.service';
 import { Router } from '@angular/router';
@@ -14,6 +14,8 @@ import { LocationResult } from '../../models/location-result';
 })
 export class Home {
   searchLocation = '';
+  @ViewChild(Map)
+  mapComponent?: Map;
   selectedLocation?: LocationResult;
   private tripService = inject(TripService);
   private router = inject(Router);
@@ -25,6 +27,6 @@ export class Home {
   onLocationSelected(result: LocationResult): void {
     this.selectedLocation = result;
 
-    console.log('Selected location:', result);
+    this.mapComponent?.goToLocation(result);
   }
 }
