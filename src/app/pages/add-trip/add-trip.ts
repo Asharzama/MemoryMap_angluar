@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { LocationSelectionService } from '../../services/location-selection.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Trip, TripService } from '../../services/trip.service';
@@ -9,10 +9,13 @@ import { Trip, TripService } from '../../services/trip.service';
   templateUrl: './add-trip.html',
   styleUrl: './add-trip.scss',
 })
-export class AddTrip {
+export class AddTrip implements OnDestroy {
   private locationSelectionService = inject(LocationSelectionService);
-
+  selectedFiles: File[] = [];
+  imagePreviews: string[] = [];
+  uploadError = '';
   selectedLocation = this.locationSelectionService.location;
+  private readonly MAX_FILE_SIZE = 5 * 1024 * 1024;
 
   tripForm = new FormGroup({
     title: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -28,6 +31,14 @@ export class AddTrip {
     description: new FormControl(''),
   });
 
+  private clearPreviewUrls(): void {
+    this.imagePreviews.forEach((url) => {
+      URL.revokeObjectURL(url);
+    });
+
+    this.imagePreviews = [];
+  }
+
   constructor(private tripService: TripService) {
     const location = this.selectedLocation();
 
@@ -38,6 +49,40 @@ export class AddTrip {
         longitude: Number(location.lon),
       });
     }
+  }
+
+  onFilesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files) {
+      return;
+    }
+    this.clearPreviewUrls();
+    this.uploadError = '';
+
+    const files = Array.from(input.files);
+
+    const invalidFiles = files.filter((file) => {
+      const isImage = file.type.startsWith('image/');
+      const isSmallEnough = file.size <= this.MAX_FILE_SIZE;
+
+      return !isImage || !isSmallEnough;
+    });
+
+    if (invalidFiles.length > 0) {
+      this.uploadError = 'Some files were skipped. Images must be 5 MB or smaller.';
+    }
+
+    const validFiles = files.filter((file) => {
+      const isImage = file.type.startsWith('image/');
+      const isSmallEnough = file.size <= this.MAX_FILE_SIZE;
+
+      return isImage && isSmallEnough;
+    });
+
+    this.selectedFiles = validFiles;
+
+    this.imagePreviews = validFiles.map((file) => URL.createObjectURL(file));
   }
 
   onSubmit() {
@@ -72,5 +117,11 @@ export class AddTrip {
     this.tripForm.reset();
 
     this.locationSelectionService.clearLocation();
+  }
+
+  ngOnDestroy(): void {
+    this.imagePreviews.forEach((url) => {
+      URL.revokeObjectURL(url);
+    });
   }
 }

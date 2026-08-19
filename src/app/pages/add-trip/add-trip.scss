@@ -42,3 +42,20 @@ button:disabled {
   color: #d32f2f;
   font-size: 0.9rem;
 }
+
+.image-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(150px, 1fr)
+  );
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.image-preview-grid img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+}

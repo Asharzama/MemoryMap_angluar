@@ -77,6 +77,23 @@
 
       <input id="longitude" type="number" formControlName="longitude" readonly />
     </div>
+    <div class="form-group">
+      <label for="images"> Trip Photos </label>
+
+      <input id="images" type="file" accept="image/*" multiple (change)="onFilesSelected($event)" />
+    </div>
+    @if (uploadError) {
+      <p class="error">
+        {{ uploadError }}
+      </p>
+    }
+    @if (imagePreviews.length > 0) {
+      <div class="image-preview-grid">
+        @for (preview of imagePreviews; track preview) {
+          <img [src]="preview" alt="Selected trip photo" />
+        }
+      </div>
+    }
     <button type="submit" [disabled]="tripForm.invalid">Save Trip</button>
   </form>
 </main>
