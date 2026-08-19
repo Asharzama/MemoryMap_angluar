@@ -6,7 +6,7 @@ export interface Trip {
   location: string;
   latitude: number;
   longitude: number;
-  image: string;
+  images: string[];
   date: string;
   description: string;
 }
@@ -22,7 +22,10 @@ export class TripService {
       location: 'Dubai, UAE',
       latitude: 25.2048,
       longitude: 55.2708,
-      image: 'https://images.unsplash.com/photo-1518684079-3c830dcef090',
+      images: [
+        'https://images.unsplash.com/photo-1518684079-3c830dcef090',
+        'https://images.unsplash.com/photo-1548013146-72479768bada',
+      ],
       date: '2026-01-20',
       description: 'An amazing desert safari experience.',
     },
@@ -32,7 +35,10 @@ export class TripService {
       location: 'Goa, India',
       latitude: 15.4909,
       longitude: 73.8278,
-      image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2',
+      images: [
+        'https://images.unsplash.com/photo-1518684079-3c830dcef090',
+        'https://images.unsplash.com/photo-1548013146-72479768bada',
+      ],
       date: '2025-12-10',
       description: 'A relaxing beach trip.',
     },
@@ -42,7 +48,10 @@ export class TripService {
       location: 'Ladakh, India',
       latitude: 34.1526,
       longitude: 77.5771,
-      image: 'https://images.unsplash.com/photo-1500534623283-312aade485b7',
+      images: [
+        'https://images.unsplash.com/photo-1518684079-3c830dcef090',
+        'https://images.unsplash.com/photo-1548013146-72479768bada',
+      ],
       date: '2025-06-15',
       description: 'An unforgettable mountain adventure.',
     },

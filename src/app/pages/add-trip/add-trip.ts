@@ -62,7 +62,7 @@ export class AddTrip {
 
       description: formValue.description ?? '',
 
-      image: 'https://images.unsplash.com/photo-1500534623283-312aade485b7',
+      images: ['https://images.unsplash.com/photo-1500534623283-312aade485b7'],
     };
 
     this.tripService.addTrip(newTrip);

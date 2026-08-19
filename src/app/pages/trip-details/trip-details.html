@@ -1,29 +1,47 @@
-<button routerLink="/trips">
-  ← Back to Trips
-</button>
 @if (trip) {
-
   <main class="trip-details">
+    <a routerLink="/trips" class="back-link"> ← Back to Trips </a>
 
-    <img
-      [src]="trip.image"
-      [alt]="trip.title"
-    >
-
-    <section>
-
+    <header class="trip-header">
       <h1>{{ trip.title }}</h1>
 
-      <p>📍 {{ trip.location }}</p>
+      <p class="location">📍 {{ trip.location }}</p>
 
-      <p>📅 {{ trip.date }}</p>
+      <p class="date">📅 {{ trip.date }}</p>
+    </header>
 
+    <section class="trip-gallery">
+      @for (image of trip.images; track image) {
+        <img [src]="image" [alt]="trip.title" />
+      }
     </section>
 
+    <section class="trip-description">
+      <h2>About this trip</h2>
+
+      <p>
+        {{ trip.description }}
+      </p>
+    </section>
+
+    <section class="trip-location">
+      <h2>Location</h2>
+
+      <p>
+        {{ trip.latitude }},
+        {{ trip.longitude }}
+      </p>
+    </section>
+    <section class="trip-map">
+      <h2>Trip Location</h2>
+
+      <app-map [trips]="[trip]"></app-map>
+    </section>
   </main>
-
 } @else {
+  <main class="trip-not-found">
+    <h1>Trip not found</h1>
 
-  <p>Trip not found.</p>
-
+    <a routerLink="/trips"> ← Back to Trips </a>
+  </main>
 }

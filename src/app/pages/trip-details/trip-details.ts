@@ -1,21 +1,21 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { RouterLink, ActivatedRoute } from '@angular/router';
+import { Map } from '../../shared/map/map';
 import { Trip, TripService } from '../../services/trip.service';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-trip-details',
-  imports: [RouterLink],
+  imports: [RouterLink, Map],
   templateUrl: './trip-details.html',
   styleUrl: './trip-details.scss',
 })
 export class TripDetails {
-  trip: Trip | undefined;
+  private route = inject(ActivatedRoute);
+  private tripService = inject(TripService);
 
-  constructor(
-    private route: ActivatedRoute,
-    private tripService: TripService,
-  ) {
+  trip?: Trip;
+
+  constructor() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     this.trip = this.tripService.getTripById(id);
