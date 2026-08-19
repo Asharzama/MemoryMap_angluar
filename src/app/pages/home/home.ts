@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Trip, TripService } from '../../services/trip.service';
 import { Router } from '@angular/router';
 import { Map } from '../../shared/map/map';
+import { LocationSelectionService } from '../../services/location-selection.service';
 import { LocationSearch } from '../../shared/location-search/location-search';
 import { LocationResult } from '../../models/location-result';
 
@@ -14,18 +15,31 @@ import { LocationResult } from '../../models/location-result';
 })
 export class Home {
   searchLocation = '';
+
   @ViewChild(Map)
   mapComponent?: Map;
+
   selectedLocation?: LocationResult;
+
+  private locationSelectionService = inject(LocationSelectionService);
   private tripService = inject(TripService);
   private router = inject(Router);
+
   trips = this.tripService.getTripsSignal();
   tripCount = this.tripService.tripCount;
+
   selectTrip(trip: Trip) {
     this.router.navigate(['/trips', trip.id]);
   }
+
+  goToAddTrip(): void {
+    this.router.navigate(['/add-trip']);
+  }
+
   onLocationSelected(result: LocationResult): void {
     this.selectedLocation = result;
+
+    this.locationSelectionService.setLocation(result);
 
     this.mapComponent?.goToLocation(result);
   }

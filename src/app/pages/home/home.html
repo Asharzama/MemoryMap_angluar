@@ -4,6 +4,27 @@
 
     <p>Keep track of the places you've visited and the memories you've created.</p>
     <app-location-search (locationSelected)="onLocationSelected($event)"></app-location-search>
+    @if (selectedLocation) {
+      <section class="selected-location">
+        <h3>Selected Location</h3>
+
+        <p>
+          {{ selectedLocation.display_name }}
+        </p>
+
+        <p>
+          Latitude:
+          {{ selectedLocation.lat }}
+        </p>
+
+        <p>
+          Longitude:
+          {{ selectedLocation.lon }}
+        </p>
+
+        <button type="button" (click)="goToAddTrip()">Save This Location</button>
+      </section>
+    }
   </section>
 
   <section class="map-section">
