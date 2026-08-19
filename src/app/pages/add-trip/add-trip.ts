@@ -1,6 +1,7 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import { LocationSelectionService } from '../../services/location-selection.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UploadService } from '../../services/upload.service';
 import { Trip, TripService } from '../../services/trip.service';
 
 @Component({
@@ -11,9 +12,11 @@ import { Trip, TripService } from '../../services/trip.service';
 })
 export class AddTrip implements OnDestroy {
   private locationSelectionService = inject(LocationSelectionService);
+  private uploadService = inject(UploadService);
   selectedFiles: File[] = [];
   imagePreviews: string[] = [];
   uploadError = '';
+  isUploading = false;
   selectedLocation = this.locationSelectionService.location;
   private readonly MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -30,6 +33,30 @@ export class AddTrip implements OnDestroy {
 
     description: new FormControl(''),
   });
+
+  private buildFormData(): FormData {
+    const formValue = this.tripForm.getRawValue();
+
+    const formData = new FormData();
+
+    formData.append('title', formValue.title ?? '');
+
+    formData.append('location', formValue.location ?? '');
+
+    formData.append('latitude', String(formValue.latitude ?? ''));
+
+    formData.append('longitude', String(formValue.longitude ?? ''));
+
+    formData.append('date', formValue.date ?? '');
+
+    formData.append('description', formValue.description ?? '');
+
+    this.selectedFiles.forEach((file) => {
+      formData.append('images', file, file.name);
+    });
+
+    return formData;
+  }
 
   private clearPreviewUrls(): void {
     this.imagePreviews.forEach((url) => {
@@ -85,38 +112,31 @@ export class AddTrip implements OnDestroy {
     this.imagePreviews = validFiles.map((file) => URL.createObjectURL(file));
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.tripForm.invalid) {
       return;
     }
 
-    const formValue = this.tripForm.getRawValue();
+    this.isUploading = true;
+    this.uploadError = '';
 
-    const newTrip: Trip = {
-      id: Date.now(),
+    const formData = this.buildFormData();
 
-      title: formValue.title ?? '',
+    this.uploadService.uploadTrip(formData).subscribe({
+      next: (response) => {
+        console.log('Upload response:', response);
 
-      location: formValue.location ?? '',
+        this.isUploading = false;
+      },
 
-      latitude: formValue.latitude ?? 0,
+      error: (error) => {
+        console.error('Upload failed:', error);
 
-      longitude: formValue.longitude ?? 0,
+        this.uploadError = 'Something went wrong while uploading your trip.';
 
-      date: formValue.date ?? '',
-
-      description: formValue.description ?? '',
-
-      images: ['https://images.unsplash.com/photo-1500534623283-312aade485b7'],
-    };
-
-    this.tripService.addTrip(newTrip);
-
-    console.log('Trip added:', newTrip);
-
-    this.tripForm.reset();
-
-    this.locationSelectionService.clearLocation();
+        this.isUploading = false;
+      },
+    });
   }
 
   ngOnDestroy(): void {

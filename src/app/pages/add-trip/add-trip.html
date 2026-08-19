@@ -94,6 +94,12 @@
         }
       </div>
     }
-    <button type="submit" [disabled]="tripForm.invalid">Save Trip</button>
+    <button type="submit" [disabled]="tripForm.invalid || isUploading">
+      @if (isUploading) {
+        Uploading...
+      } @else {
+        Save Trip
+      }
+    </button>
   </form>
 </main>
