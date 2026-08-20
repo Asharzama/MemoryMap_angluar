@@ -3,6 +3,17 @@
     <h1>Travel Memory Map</h1>
 
     <p>Keep track of the places you've visited and the memories you've created.</p>
+    <div class="trip-stats">
+      <div>
+        <strong>{{ tripCount() }}</strong>
+        <span>Trips</span>
+      </div>
+
+      <div>
+        <strong>{{ visitedLocations() }}</strong>
+        <span>Locations</span>
+      </div>
+    </div>
     <app-location-search (locationSelected)="onLocationSelected($event)"></app-location-search>
     @if (selectedLocation) {
       <section class="selected-location">

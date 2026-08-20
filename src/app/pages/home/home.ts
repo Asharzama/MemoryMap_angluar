@@ -28,6 +28,7 @@ export class Home {
 
   trips = this.tripService.trips;
   tripCount = this.tripService.tripCount;
+  visitedLocations = this.tripService.visitedLocations;
 
   selectTrip(trip: Trip) {
     this.router.navigate(['/trips', trip.id]);

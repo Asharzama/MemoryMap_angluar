@@ -68,3 +68,27 @@ app-map {
 .map-section {
   margin: 2rem 0;
 }
+
+.trip-stats {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.trip-stats > div {
+  display: flex;
+  flex-direction: column;
+
+  padding: 1rem 1.5rem;
+
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.trip-stats strong {
+  font-size: 1.5rem;
+}
+
+.trip-stats span {
+  font-size: 0.9rem;
+}

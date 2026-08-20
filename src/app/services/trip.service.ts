@@ -1,11 +1,10 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal, effect } from '@angular/core';
 import { Trip } from '../models/trip.model';
 import { CreateTrip } from '../models/create-trip.model';
 
 @Injectable({
   providedIn: 'root',
 })
-
 export class TripService {
   MOCK_TRIPS: Trip[] = [
     {
@@ -42,7 +41,27 @@ export class TripService {
     },
   ];
 
-  private tripsSignal = signal<Trip[]>(this.MOCK_TRIPS);
+  constructor() {
+    effect(() => {
+      localStorage.setItem('travel-trips', JSON.stringify(this.tripsSignal()));
+    });
+  }
+
+  private tripsSignal = signal<Trip[]>(this.loadTrips());
+
+  private loadTrips(): Trip[] {
+    const stored = localStorage.getItem('travel-trips');
+
+    if (!stored) {
+      return this.MOCK_TRIPS;
+    }
+
+    try {
+      return JSON.parse(stored) as Trip[];
+    } catch {
+      return this.MOCK_TRIPS;
+    }
+  }
 
   readonly trips = this.tripsSignal.asReadonly();
 
@@ -51,6 +70,12 @@ export class TripService {
   }
 
   readonly tripCount = computed(() => this.tripsSignal().length);
+
+  readonly visitedLocations = computed(() => {
+    const locations = this.tripsSignal().map((trip) => trip.location);
+
+    return new Set(locations).size;
+  });
 
   getTrips(): Trip[] {
     return this.tripsSignal();
