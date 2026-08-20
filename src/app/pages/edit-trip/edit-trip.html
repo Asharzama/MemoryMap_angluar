@@ -1,0 +1,59 @@
+<main class="edit-trip">
+  @if (trip) {
+    <a routerLink="/trips"> ← Back to Trips </a>
+
+    <h1>Edit Trip</h1>
+
+    <form [formGroup]="tripForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="title"> Trip Name </label>
+
+        <input id="title" type="text" formControlName="title" />
+
+        @if (tripForm.controls.title.invalid && tripForm.controls.title.touched) {
+          <p class="error">Trip name is required.</p>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="location"> Location </label>
+
+        <input id="location" type="text" formControlName="location" readonly />
+      </div>
+
+      <div class="form-group">
+        <label for="latitude"> Latitude </label>
+
+        <input id="latitude" type="number" formControlName="latitude" readonly />
+      </div>
+
+      <div class="form-group">
+        <label for="longitude"> Longitude </label>
+
+        <input id="longitude" type="number" formControlName="longitude" readonly />
+      </div>
+
+      <div class="form-group">
+        <label for="date"> Visit Date </label>
+
+        <input id="date" type="date" formControlName="date" />
+      </div>
+
+      <div class="form-group">
+        <label for="description"> Description </label>
+
+        <textarea id="description" rows="5" formControlName="description"></textarea>
+      </div>
+
+      <div class="actions">
+        <button type="submit" [disabled]="tripForm.invalid">Save Changes</button>
+
+        <a [routerLink]="['/trips', trip.id]"> Cancel </a>
+      </div>
+    </form>
+  } @else {
+    <h1>Trip not found</h1>
+
+    <a routerLink="/trips"> ← Back to Trips </a>
+  }
+</main>

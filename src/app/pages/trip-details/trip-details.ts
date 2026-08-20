@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { Map } from '../../shared/map/map';
 import { TripService } from '../../services/trip.service';
 import { Trip } from '../../models/trip.model';
@@ -13,6 +13,7 @@ import { Trip } from '../../models/trip.model';
 export class TripDetails {
   private route = inject(ActivatedRoute);
   private tripService = inject(TripService);
+  private router = inject(Router);
 
   trip?: Trip;
 
@@ -24,5 +25,21 @@ export class TripDetails {
     }
 
     this.trip = this.tripService.getTripById(id);
+  }
+
+  deleteTrip(): void {
+    if (!this.trip) {
+      return;
+    }
+
+    const confirmed = window.confirm(`Delete "${this.trip.title}"?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.tripService.deleteTrip(this.trip.id);
+
+    this.router.navigate(['/trips']);
   }
 }

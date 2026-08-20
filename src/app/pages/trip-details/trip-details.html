@@ -8,6 +8,11 @@
       <p class="location">📍 {{ trip.location }}</p>
 
       <p class="date">📅 {{ trip.date }}</p>
+
+      <div class="trip-actions">
+        <a [routerLink]="['/trips', trip.id, 'edit']"> Edit Trip </a>
+        <button type="button" (click)="deleteTrip()">Delete Trip</button>
+      </div>
     </header>
 
     <section class="trip-gallery">

@@ -73,3 +73,22 @@
 
   border-radius: 12px;
 }
+
+.trip-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.trip-actions a,
+.trip-actions button {
+  display: inline-block;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.trip-actions button {
+  border: none;
+}
