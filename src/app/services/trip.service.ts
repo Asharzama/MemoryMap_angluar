@@ -1,6 +1,7 @@
 import { computed, Injectable, signal, effect } from '@angular/core';
 import { Trip } from '../models/trip.model';
 import { CreateTrip } from '../models/create-trip.model';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -45,6 +46,10 @@ export class TripService {
     effect(() => {
       localStorage.setItem('travel-trips', JSON.stringify(this.tripsSignal()));
     });
+  }
+  
+  getTrips$(): Observable<Trip[]> {
+    return of(this.tripsSignal());
   }
 
   private tripsSignal = signal<Trip[]>(this.loadTrips());
