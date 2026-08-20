@@ -1,8 +1,7 @@
 import { AfterViewInit, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { LocationResult } from '../../models/location-result';
 import * as L from 'leaflet';
-
-import { Trip } from '../../services/trip.service';
+import { Trip } from '../../models/trip.model';
 
 const defaultIcon = L.icon({
   iconUrl: 'assets/leaflet/marker-icon.png',

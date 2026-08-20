@@ -2,7 +2,8 @@ import { Component, OnDestroy, inject } from '@angular/core';
 import { LocationSelectionService } from '../../services/location-selection.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UploadService } from '../../services/upload.service';
-import { Trip, TripService } from '../../services/trip.service';
+import { TripService } from '../../services/trip.service';
+import { Trip } from "../../models/trip.model";
 
 @Component({
   selector: 'app-add-trip',

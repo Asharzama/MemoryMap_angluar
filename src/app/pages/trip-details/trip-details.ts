@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { Map } from '../../shared/map/map';
-import { Trip, TripService } from '../../services/trip.service';
+import { TripService } from '../../services/trip.service';
+import { Trip } from '../../models/trip.model';
 
 @Component({
   selector: 'app-trip-details',
@@ -16,7 +17,11 @@ export class TripDetails {
   trip?: Trip;
 
   constructor() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (!id) {
+      return;
+    }
 
     this.trip = this.tripService.getTripById(id);
   }

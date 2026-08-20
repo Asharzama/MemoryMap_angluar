@@ -1,6 +1,7 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Trip, TripService } from '../../services/trip.service';
+import { TripService } from '../../services/trip.service';
+import { Trip } from '../../models/trip.model';
 import { Router } from '@angular/router';
 import { Map } from '../../shared/map/map';
 import { LocationSelectionService } from '../../services/location-selection.service';
@@ -25,7 +26,7 @@ export class Home {
   private tripService = inject(TripService);
   private router = inject(Router);
 
-  trips = this.tripService.getTripsSignal();
+  trips = this.tripService.trips;
   tripCount = this.tripService.tripCount;
 
   selectTrip(trip: Trip) {

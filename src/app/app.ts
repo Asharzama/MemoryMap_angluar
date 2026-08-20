@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Navbar } from './shared/navbar/navbar';
-import { Trip, TripService } from './services/trip.service';
+import { TripService } from './services/trip.service';
+import { Trip } from './models/trip.model';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
