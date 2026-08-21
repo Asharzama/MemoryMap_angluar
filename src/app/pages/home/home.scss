@@ -92,3 +92,7 @@ app-map {
 .trip-stats span {
   font-size: 0.9rem;
 }
+
+.trip-card.selected {
+  outline: 3px solid #333;
+}

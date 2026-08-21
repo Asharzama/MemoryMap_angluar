@@ -1,19 +1,17 @@
-import { AfterViewInit, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { LocationResult } from '../../models/location-result';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+
 import * as L from 'leaflet';
+
 import { Trip } from '../../models/trip.model';
-
-const defaultIcon = L.icon({
-  iconUrl: 'assets/leaflet/marker-icon.png',
-  iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
-  shadowUrl: 'assets/leaflet/marker-shadow.png',
-
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-L.Marker.prototype.options.icon = defaultIcon;
+import { LocationResult } from '../../models/location-result';
 
 @Component({
   selector: 'app-map',
@@ -22,38 +20,17 @@ L.Marker.prototype.options.icon = defaultIcon;
   styleUrl: './map.scss',
 })
 export class Map implements AfterViewInit, OnChanges {
-  
   @Input() trips: Trip[] = [];
-  private searchMarker?: L.Marker;
+
+  @Input() selectedTripId?: string;
+
+  @Output() tripSelected = new EventEmitter<Trip>();
+
   private map?: L.Map;
 
-  private markers: L.Marker[] = [];
+  private tripMarkers = new globalThis.Map<string, L.Marker>();
 
-  goToLocation(result: LocationResult): void {
-    if (!this.map) {
-      return;
-    }
-
-    const latitude = Number(result.lat);
-    const longitude = Number(result.lon);
-
-    this.map.flyTo([latitude, longitude], 16);
-
-    if (this.searchMarker) {
-      this.searchMarker.remove();
-    }
-
-    this.searchMarker = L.marker([latitude, longitude])
-      .addTo(this.map)
-      .bindPopup(
-        `
-    <strong>Selected Location</strong>
-    <br>
-    ${result.display_name}
-  `,
-      )
-      .openPopup();
-  }
+  private searchMarker?: L.Marker;
 
   ngAfterViewInit(): void {
     this.map = L.map('map');
@@ -69,6 +46,36 @@ export class Map implements AfterViewInit, OnChanges {
     if (changes['trips']) {
       this.renderMarkers();
     }
+
+    if (changes['selectedTripId'] && this.selectedTripId) {
+      this.focusTrip(this.selectedTripId);
+    }
+  }
+
+  private bindTripPopup(marker: L.Marker, trip: Trip): void {
+    marker.bindPopup(`
+    <div>
+      <strong>${trip.title}</strong>
+      <br>
+      ${trip.location}
+      <br><br>
+
+      <button
+        class="map-trip-button"
+        data-trip-id="${trip.id}"
+      >
+        View Trip
+      </button>
+    </div>
+  `);
+
+    marker.on('popupopen', () => {
+      const button = document.querySelector(`[data-trip-id="${trip.id}"]`);
+
+      button?.addEventListener('click', () => {
+        this.tripSelected.emit(trip);
+      });
+    });
   }
 
   private renderMarkers(): void {
@@ -81,13 +88,15 @@ export class Map implements AfterViewInit, OnChanges {
     const locations: L.LatLngExpression[] = [];
 
     this.trips.forEach((trip) => {
-      const marker = L.marker([trip.latitude, trip.longitude]).addTo(this.map!).bindPopup(`
-          <strong>${trip.title}</strong>
-          <br>
-          ${trip.location}
-        `);
+      const marker = L.marker([trip.latitude, trip.longitude]).addTo(this.map!);
 
-      this.markers.push(marker);
+      this.bindTripPopup(marker, trip);
+
+      marker.on('click', () => {
+        this.tripSelected.emit(trip);
+      });
+
+      this.tripMarkers.set(trip.id, marker);
 
       locations.push([trip.latitude, trip.longitude]);
     });
@@ -100,10 +109,51 @@ export class Map implements AfterViewInit, OnChanges {
   }
 
   private clearMarkers(): void {
-    this.markers.forEach((marker) => {
+    this.tripMarkers.forEach((marker) => {
       marker.remove();
     });
 
-    this.markers = [];
+    this.tripMarkers.clear();
+  }
+
+  focusTrip(tripId: string): void {
+    if (!this.map) {
+      return;
+    }
+
+    const trip = this.trips.find((item) => item.id === tripId);
+
+    if (!trip) {
+      return;
+    }
+
+    this.map.flyTo([trip.latitude, trip.longitude], 14);
+
+    const marker = this.tripMarkers.get(tripId);
+
+    if (marker) {
+      marker.openPopup();
+    }
+  }
+
+  goToLocation(result: LocationResult): void {
+    if (!this.map) {
+      return;
+    }
+
+    const latitude = Number(result.lat);
+
+    const longitude = Number(result.lon);
+
+    this.map.flyTo([latitude, longitude], 16);
+
+    if (this.searchMarker) {
+      this.searchMarker.remove();
+    }
+
+    this.searchMarker = L.marker([latitude, longitude])
+      .addTo(this.map)
+      .bindPopup(result.display_name)
+      .openPopup();
   }
 }

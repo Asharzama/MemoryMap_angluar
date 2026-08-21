@@ -1,20 +1,12 @@
 <main class="travel-container">
+  <!-- Hero / Search -->
   <section class="hero">
     <h1>Travel Memory Map</h1>
 
     <p>Keep track of the places you've visited and the memories you've created.</p>
-    <div class="trip-stats">
-      <div>
-        <strong>{{ tripCount() }}</strong>
-        <span>Trips</span>
-      </div>
 
-      <div>
-        <strong>{{ visitedLocations() }}</strong>
-        <span>Locations</span>
-      </div>
-    </div>
     <app-location-search (locationSelected)="onLocationSelected($event)"></app-location-search>
+
     @if (selectedLocation) {
       <section class="selected-location">
         <h3>Selected Location</h3>
@@ -38,13 +30,77 @@
     }
   </section>
 
+  <!-- Trip Statistics -->
+  <section class="trip-stats">
+    <div>
+      <strong>{{ tripCount() }}</strong>
+      <span>Trips</span>
+    </div>
+
+    <div>
+      <strong>{{ visitedLocations() }}</strong>
+      <span>Locations</span>
+    </div>
+  </section>
+
+  <!-- Map -->
   <section class="map-section">
     <h2>Places I've Visited</h2>
 
-    <app-map [trips]="trips()"></app-map>
+    <app-map
+      [trips]="trips()"
+      [selectedTripId]="selectedTripId"
+      (tripSelected)="selectTripOnMap($event)"
+    ></app-map>
   </section>
 
+  <!-- Trips -->
   <section class="trip-section">
-    <!-- trip cards -->
+    @if (trips().length > 0) {
+      <div class="trip-header">
+        <h2>My Trips</h2>
+
+        <p>
+          You have
+          <strong>{{ tripCount() }}</strong>
+          trips recorded.
+        </p>
+      </div>
+
+      <div class="trip-grid">
+        @for (trip of trips(); track trip.id) {
+          <article class="trip-card" [class.selected]="selectedTripId === trip.id">
+            <!-- Trip Image -->
+            <img [src]="trip.images[0]" [alt]="trip.title" />
+
+            <!-- Trip Information -->
+            <div class="trip-info">
+              <h2>
+                {{ trip.title }}
+              </h2>
+
+              <p>📍 {{ trip.location }}</p>
+
+              <p>📅 {{ trip.date }}</p>
+
+              <!-- Actions -->
+              <div class="trip-actions">
+                <button type="button" (click)="focusTripOnMap(trip)">View on Map</button>
+
+                <button type="button" (click)="selectTrip(trip)">Explore Trip</button>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <section class="empty-trips">
+        <h2>No trips yet</h2>
+
+        <p>Start building your travel memories.</p>
+
+        <button type="button" routerLink="/add-trip">Add Your First Trip</button>
+      </section>
+    }
   </section>
 </main>

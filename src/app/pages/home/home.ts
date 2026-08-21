@@ -18,10 +18,12 @@ import { DemoService } from '../../services/demo.service';
 })
 export class Home {
   searchLocation = '';
-
+  selectedTripId?: string;
   @ViewChild(Map)
   mapComponent?: Map;
-
+  selectTripOnMap(trip: Trip): void {
+    this.selectedTripId = trip.id;
+  }
   selectedLocation?: LocationResult;
 
   private locationSelectionService = inject(LocationSelectionService);
@@ -39,6 +41,10 @@ export class Home {
 
   goToAddTrip(): void {
     this.router.navigate(['/add-trip']);
+  }
+
+  focusTripOnMap(trip: Trip): void {
+    this.selectedTripId = trip.id;
   }
 
   onLocationSelected(result: LocationResult): void {
