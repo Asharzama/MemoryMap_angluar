@@ -3,10 +3,11 @@ import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { Map } from '../../shared/map/map';
 import { TripService } from '../../services/trip.service';
 import { Trip } from '../../models/trip.model';
+import { ImageGallery } from '../../shared/image-gallery/image-gallery';
 
 @Component({
   selector: 'app-trip-details',
-  imports: [RouterLink, Map],
+  imports: [RouterLink, Map, ImageGallery],
   templateUrl: './trip-details.html',
   styleUrl: './trip-details.scss',
 })

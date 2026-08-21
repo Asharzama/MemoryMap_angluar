@@ -1,0 +1,56 @@
+<section class="gallery">
+  @if (images.length > 0) {
+    <div class="thumbnail-grid">
+      @for (image of images; track image; let index = $index) {
+        <button type="button" class="thumbnail" (click)="openImage(index)">
+          <img [src]="image" alt="Trip photo" />
+        </button>
+      }
+    </div>
+  } @else {
+    <p class="no-images">No photos available.</p>
+  }
+  @if (selectedIndex() !== null) {
+    <div class="lightbox" (click)="closeImage()">
+      <button
+        type="button"
+        class="close-button"
+        (click)="closeImage(); $event.stopPropagation()"
+        aria-label="Close image"
+      >
+        ×
+      </button>
+
+      <button
+        type="button"
+        class="navigation previous"
+        (click)="previousImage(); $event.stopPropagation()"
+        aria-label="Previous image"
+      >
+        ←
+      </button>
+
+      <img
+        class="lightbox-image"
+        [src]="images[selectedIndex()!]"
+        alt="Trip photo"
+        (click)="$event.stopPropagation()"
+      />
+
+      <button
+        type="button"
+        class="navigation next"
+        (click)="nextImage(); $event.stopPropagation()"
+        aria-label="Next image"
+      >
+        →
+      </button>
+
+      <p class="counter">
+        {{ selectedIndex()! + 1 }}
+        /
+        {{ images.length }}
+      </p>
+    </div>
+  }
+</section>

@@ -16,9 +16,9 @@
     </header>
 
     <section class="trip-gallery">
-      @for (image of trip.images; track image) {
-        <img [src]="image" [alt]="trip.title" />
-      }
+      <h2>Photos</h2>
+
+      <app-image-gallery [images]="trip.images"></app-image-gallery>
     </section>
 
     <section class="trip-description">
