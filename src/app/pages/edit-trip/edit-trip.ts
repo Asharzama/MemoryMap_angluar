@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-
+import { CanLeavePage } from '../../guards/unsaved-changes';
 import { TripService } from '../../services/trip.service';
 import { Trip } from '../../models/trip.model';
 
@@ -13,7 +13,7 @@ import { Trip } from '../../models/trip.model';
   templateUrl: './edit-trip.html',
   styleUrl: './edit-trip.scss',
 })
-export class EditTrip {
+export class EditTrip implements CanLeavePage {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private tripService = inject(TripService);
@@ -74,5 +74,13 @@ export class EditTrip {
     });
 
     this.router.navigate(['/trips', this.trip.id]);
+  }
+  
+  canDeactivate(): boolean {
+    if (!this.tripForm.dirty) {
+      return true;
+    }
+
+    return window.confirm('You have unsaved changes. Are you sure you want to leave?');
   }
 }

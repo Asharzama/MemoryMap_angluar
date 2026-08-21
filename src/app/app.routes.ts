@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth-guard';
+import { unsavedChangesGuard } from './guards/unsaved-changes-guard';
 import { Home } from './pages/home/home';
 import { Trips } from './pages/trips/trips';
 
@@ -20,6 +21,7 @@ export const routes: Routes = [
   {
     path: 'trips/:id/edit',
     canActivate: [authGuard],
+    canDeactivate: [unsavedChangesGuard],
     loadComponent: () => import('./pages/edit-trip/edit-trip').then((m) => m.EditTrip),
   },
   {
