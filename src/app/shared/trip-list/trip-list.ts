@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, input, output } from '@angular/core';
 
 import { Trip } from '../../models/trip.model';
 
@@ -9,15 +9,14 @@ import { Trip } from '../../models/trip.model';
   styleUrl: './trip-list.scss',
 })
 export class TripList {
-  @Input() trips: Trip[] = [];
+  trips = input.required<Trip[]>();
+  selectedTripId = input<string>();
 
-  @Input() selectedTripId?: string;
+  viewOnMap = output<Trip>();
 
-  @Output() viewOnMap = new EventEmitter<Trip>();
+  exploreTrip = output<Trip>();
 
-  @Output() exploreTrip = new EventEmitter<Trip>();
-
-  @Output() addTrip = new EventEmitter<void>();
+  addTrip = output<void>();
 
   focusOnMap(trip: Trip): void {
     this.viewOnMap.emit(trip);

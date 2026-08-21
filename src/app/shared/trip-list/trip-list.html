@@ -1,7 +1,7 @@
-@if (trips.length > 0) {
+@if (trips().length > 0) {
   <div class="trip-grid">
-    @for (trip of trips; track trip.id) {
-      <article class="trip-card" [class.selected]="selectedTripId === trip.id">
+    @for (trip of trips(); track trip.id) {
+      <article class="trip-card" [class.selected]="selectedTripId() === trip.id">
         <img [src]="trip.images[0]" [alt]="trip.title" />
 
         <div class="trip-info">
