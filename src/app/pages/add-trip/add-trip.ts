@@ -1,9 +1,12 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import { LocationSelectionService } from '../../services/location-selection.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { signal } from '@angular/core';
+import { Post } from '../../models/post.model';
 import { UploadService } from '../../services/upload.service';
 import { TripService } from '../../services/trip.service';
-import { Trip } from "../../models/trip.model";
+import { Trip } from '../../models/trip.model';
+import { RequestState } from '../../models/request-state.model';
 
 @Component({
   selector: 'app-add-trip',
@@ -14,6 +17,11 @@ import { Trip } from "../../models/trip.model";
 export class AddTrip implements OnDestroy {
   private locationSelectionService = inject(LocationSelectionService);
   private uploadService = inject(UploadService);
+  postsState = signal<RequestState<Post[]>>({
+    status: 'idle',
+    data: null,
+    error: null,
+  });
   selectedFiles: File[] = [];
   imagePreviews: string[] = [];
   uploadError = '';
