@@ -2,10 +2,6 @@ import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth-guard';
 import { Home } from './pages/home/home';
 import { Trips } from './pages/trips/trips';
-import { AddTrip } from './pages/add-trip/add-trip';
-import { TripDetails } from './pages/trip-details/trip-details';
-import { EditTrip } from './pages/edit-trip/edit-trip';
-import { Login } from './pages/login/login';
 
 export const routes: Routes = [
   {
@@ -18,20 +14,20 @@ export const routes: Routes = [
   },
   {
     path: 'add-trip',
-    component: AddTrip,
     canActivate: [authGuard],
-  },
-  {
-    path: 'trips/:id',
-    component: TripDetails,
+    loadComponent: () => import('./pages/add-trip/add-trip').then((m) => m.AddTrip),
   },
   {
     path: 'trips/:id/edit',
-    component: EditTrip,
     canActivate: [authGuard],
+    loadComponent: () => import('./pages/edit-trip/edit-trip').then((m) => m.EditTrip),
+  },
+  {
+    path: 'trips/:id',
+    loadComponent: () => import('./pages/trip-details/trip-details').then((m) => m.TripDetails),
   },
   {
     path: 'login',
-    component: Login,
+    loadComponent: () => import('./pages/login/login').then((m) => m.Login),
   },
 ];
