@@ -6,6 +6,13 @@
 
     <a routerLink="/trips"> My Trips </a>
 
-    <a routerLink="/add-trip"> Add Trip </a>
+    @if (isAuthenticated()) {
+      <a routerLink="/add-trip"> Add Trip </a>
+    }
   </div>
+  @if (isAuthenticated()) {
+    <button type="button" (click)="logout()">Logout</button>
+  } @else {
+    <a routerLink="/login"> Login </a>
+  }
 </nav>
