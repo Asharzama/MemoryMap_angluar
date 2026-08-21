@@ -7,27 +7,25 @@
 
     <app-location-search (locationSelected)="onLocationSelected($event)"></app-location-search>
 
-    @if (selectedLocation) {
-      <section class="selected-location">
-        <h3>Selected Location</h3>
+    <section class="trip-section">
+      <div class="trip-header">
+        <h2>My Trips</h2>
 
         <p>
-          {{ selectedLocation.display_name }}
+          You have
+          <strong>{{ tripCount() }}</strong>
+          trips recorded.
         </p>
+      </div>
 
-        <p>
-          Latitude:
-          {{ selectedLocation.lat }}
-        </p>
-
-        <p>
-          Longitude:
-          {{ selectedLocation.lon }}
-        </p>
-
-        <button type="button" (click)="goToAddTrip()">Save This Location</button>
-      </section>
-    }
+      <app-trip-list
+        [trips]="trips()"
+        [selectedTripId]="selectedTripId"
+        (viewOnMap)="focusTripOnMap($event)"
+        (exploreTrip)="openTrip($event)"
+        (addTrip)="addTripFromList()"
+      ></app-trip-list>
+    </section>
   </section>
 
   <!-- Trip Statistics -->

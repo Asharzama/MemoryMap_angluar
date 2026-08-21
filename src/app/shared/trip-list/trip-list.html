@@ -1,0 +1,31 @@
+@if (trips.length > 0) {
+  <div class="trip-grid">
+    @for (trip of trips; track trip.id) {
+      <article class="trip-card" [class.selected]="selectedTripId === trip.id">
+        <img [src]="trip.images[0]" [alt]="trip.title" />
+
+        <div class="trip-info">
+          <h2>{{ trip.title }}</h2>
+
+          <p>📍 {{ trip.location }}</p>
+
+          <p>📅 {{ trip.date }}</p>
+
+          <div class="trip-actions">
+            <button type="button" (click)="focusOnMap(trip)">View on Map</button>
+
+            <button type="button" (click)="openTrip(trip)">Explore Trip</button>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+} @else {
+  <section class="empty-trips">
+    <h2>No trips yet</h2>
+
+    <p>Start building your travel memories.</p>
+
+    <button type="button" (click)="openAddTrip()">Add Your First Trip</button>
+  </section>
+}

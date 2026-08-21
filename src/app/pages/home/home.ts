@@ -1,6 +1,6 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { debounceTime } from 'rxjs';
 import { TripService } from '../../services/trip.service';
 import { Trip } from '../../models/trip.model';
@@ -9,10 +9,11 @@ import { LocationSelectionService } from '../../services/location-selection.serv
 import { LocationSearch } from '../../shared/location-search/location-search';
 import { LocationResult } from '../../models/location-result';
 import { DemoService } from '../../services/demo.service';
+import { TripList } from '../../shared/trip-list/trip-list';
 
 @Component({
   selector: 'app-home',
-  imports: [FormsModule, Map, LocationSearch],
+  imports: [FormsModule, Map, LocationSearch, RouterLink, TripList],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -21,9 +22,7 @@ export class Home {
   selectedTripId?: string;
   @ViewChild(Map)
   mapComponent?: Map;
-  selectTripOnMap(trip: Trip): void {
-    this.selectedTripId = trip.id;
-  }
+
   selectedLocation?: LocationResult;
 
   private locationSelectionService = inject(LocationSelectionService);
@@ -35,6 +34,17 @@ export class Home {
   tripCount = this.tripService.tripCount;
   visitedLocations = this.tripService.visitedLocations;
 
+  focusTripOnMap(trip: Trip): void {
+    this.selectedTripId = trip.id;
+  }
+
+  selectTripOnMap(trip: Trip): void {
+    this.selectedTripId = trip.id;
+  }
+
+  openTrip(trip: Trip): void {
+    this.router.navigate(['/trips', trip.id]);
+  }
   selectTrip(trip: Trip) {
     this.router.navigate(['/trips', trip.id]);
   }
@@ -43,8 +53,8 @@ export class Home {
     this.router.navigate(['/add-trip']);
   }
 
-  focusTripOnMap(trip: Trip): void {
-    this.selectedTripId = trip.id;
+  addTripFromList(): void {
+    this.router.navigate(['/add-trip']);
   }
 
   onLocationSelected(result: LocationResult): void {
